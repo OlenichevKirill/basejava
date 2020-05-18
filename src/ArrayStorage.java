@@ -5,13 +5,16 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    int size;
 
     void clear() {
         Arrays.fill(storage, 0, size(), null);
+        size = 0;
     }
 
     void save(Resume resume) {
         storage[size()] = resume;
+        size++;
     }
 
     Resume get(String uuid) {
@@ -36,6 +39,7 @@ public class ArrayStorage {
         for (int i = num; i < size(); i++) {
             storage[i] = storage[i + 1];
         }
+        size--;
     }
 
     /**
@@ -46,14 +50,6 @@ public class ArrayStorage {
     }
 
     int size() {
-        int size = 0;
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null) {
-                size++;
-            } else {
-                break;
-            }
-        }
         return size;
     }
 }
