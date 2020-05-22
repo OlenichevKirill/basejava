@@ -8,8 +8,8 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
-    int size;
+    private Resume[] storage = new Resume[10000];
+    private int size;
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -18,11 +18,11 @@ public class ArrayStorage {
 
     public void save(Resume resume) {
         if (storage.length > size) {
-            if (!checkResume(resume.toString())) {
+            if (getNumResume(resume.toString()) == -1) {
                 storage[size] = resume;
                 size++;
             } else {
-                System.out.println("Такое резюме уже есть");
+                System.out.println("Резюме " + resume.toString() + " уже есть");
             }
         } else {
             System.out.println("Область хранения массива переполнена");
@@ -31,43 +31,43 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         Resume res = null;
-        for (int i = 0; i < size; i++) {
-            if (storage[i].toString() == uuid) {
-                res = storage[i];
-                break;
-            }
+        int num = getNumResume(uuid);
+        if (num != -1) {
+            res = storage[num];
+        } else {
+            System.out.println("Резюме " + uuid + " отсутсвует");
         }
         return res;
     }
 
     public void delete(String uuid) {
-        if (checkResume(uuid)) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].toString() == uuid) {
-                    storage[i] = storage[size - 1];
-                    storage[size - 1] = null;
-                    size--;
-                }
-            }
+        int num = getNumResume(uuid);
+        if (num != -1) {
+            storage[num] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
         } else {
-            System.out.println("Не найдено резюме для удаления");
+            System.out.println("Резюме " + uuid + " не найдено для удаления");
         }
     }
 
     public void update(Resume resume) {
-        if (checkResume(resume.toString())) {
-            System.out.println("Найдено резюме для редактирования");
+        int num = getNumResume(resume.toString());
+        if (num != -1) {
+            storage[num] = resume;
         } else {
-            System.out.println("Резюме для редактирования отсутсвует");
+            System.out.println("Резюме " + resume.toString() + " для редактирования отсутствует");
         }
     }
 
-    private boolean checkResume(String uuid) {
-        if (get(uuid) != null) {
-            return true;
-        } else {
-            return false;
+    private int getNumResume(String uuid) {
+        int num = -1;
+        for (int i = 0; i < size; i++) {
+            if (storage[i].toString().equals(uuid)) {
+                num = i;
+            }
         }
+        return num;
     }
 
 
