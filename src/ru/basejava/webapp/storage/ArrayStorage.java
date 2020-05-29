@@ -9,7 +9,6 @@ import java.util.Arrays;
  */
 public class ArrayStorage extends AbstractArrayStorage {
 
-
     @Override
     protected int getNumResume(String uuid) {
         int num = -1;

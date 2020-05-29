@@ -1,5 +1,8 @@
 package ru.basejava.webapp.storage;
 
+import ru.basejava.webapp.exception.ExistStorageException;
+import ru.basejava.webapp.exception.NotExistStorageException;
+import ru.basejava.webapp.exception.StorageException;
 import ru.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -21,7 +24,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (num >= 0) {
             res = storage[num];
         } else {
-            System.out.println("Резюме " + uuid + " отсутсвует");
+            throw new NotExistStorageException(uuid);
         }
         return res;
     }
@@ -31,7 +34,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (num >= 0) {
             storage[num] = resume;
         } else {
-            System.out.println("Резюме " + resume.toString() + " для редактирования отсутствует");
+            throw new NotExistStorageException(resume.toString());
         }
     }
 
@@ -50,7 +53,7 @@ public abstract class AbstractArrayStorage implements Storage {
             storage[size - 1] = null;
             size--;
         } else {
-            System.out.println("Резюме " + uuid + " не найдено для удаления");
+            throw new NotExistStorageException(uuid);
         }
     }
 
@@ -61,10 +64,10 @@ public abstract class AbstractArrayStorage implements Storage {
                 saveElementStorage(resume, num);
                 size++;
             } else {
-                System.out.println("Резюме " + resume.toString() + " уже есть");
+                throw new ExistStorageException(resume.toString());
             }
         } else {
-            System.out.println("Область хранения массива переполнена");
+            throw new StorageException("Storage overflow", resume.toString());
         }
     }
 
