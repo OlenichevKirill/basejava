@@ -8,7 +8,7 @@ import ru.basejava.webapp.exception.NotExistStorageException;
 import ru.basejava.webapp.exception.StorageException;
 import ru.basejava.webapp.model.Resume;
 
-public class AbstractArrayStorageTest {
+public abstract class AbstractArrayStorageTest {
     private Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -47,15 +47,18 @@ public class AbstractArrayStorageTest {
     public void getAll() {
         Resume[] arrayResume = storage.getAll();
         Assert.assertEquals(3, arrayResume.length);
-        Assert.assertEquals(resume1, arrayResume[0]);
-        Assert.assertEquals(resume2, arrayResume[1]);
-        Assert.assertEquals(resume3, arrayResume[2]);
+        Assert.assertEquals(storage.getAll(), arrayResume);
     }
 
     @Test
     public void get() {
-        Resume resumeTest = storage.get("uuid1");
+        Resume resumeTest = storage.get(UUID_1);
         Assert.assertSame(resume1, resumeTest);
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void getNotExist() throws Exception {
+        storage.get(UUID_4);
     }
 
     @Test
@@ -63,7 +66,11 @@ public class AbstractArrayStorageTest {
         Resume resumeTest = new Resume(UUID_2);
         storage.update(resumeTest);
         Assert.assertEquals(resumeTest, storage.get(UUID_2));
-        Assert.assertEquals(resume2, storage.get(UUID_2));
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void updateNotExist() throws Exception {
+        storage.update(resume4);
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -73,16 +80,16 @@ public class AbstractArrayStorageTest {
         storage.get(UUID_1);
     }
 
+    @Test(expected = NotExistStorageException.class)
+    public void deleteNotExist() throws Exception {
+        storage.delete(UUID_4);
+    }
+
     @Test
     public void save() {
         storage.save(resume4);
         Assert.assertEquals(4, storage.size());
         Assert.assertEquals(resume4, storage.get(UUID_4));
-    }
-
-    @Test(expected = NotExistStorageException.class)
-    public void getNotExist() throws Exception {
-        storage.get("dummy");
     }
 
     @Test(expected = ExistStorageException.class)
