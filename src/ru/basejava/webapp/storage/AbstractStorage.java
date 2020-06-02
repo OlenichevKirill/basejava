@@ -1,5 +1,6 @@
 package ru.basejava.webapp.storage;
 
+import ru.basejava.webapp.exception.ExistStorageException;
 import ru.basejava.webapp.exception.NotExistStorageException;
 import ru.basejava.webapp.model.Resume;
 
@@ -29,7 +30,7 @@ public abstract class AbstractStorage implements Storage {
     public void save(Resume resume) {
         int num = getNumResume(resume.toString());
         if (num >= 0) {
-            throw new NotExistStorageException(resume.toString());
+            throw new ExistStorageException(resume.toString());
         } else {
             doSave(resume, num);
         }
