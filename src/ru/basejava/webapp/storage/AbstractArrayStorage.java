@@ -13,26 +13,24 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
 
-    public void doClear() {
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     public Resume doGet(int index) {
-        Resume res = null;
-        res = storage[index];
-        return res;
+        return storage[index];
     }
 
     public void doUpdate(int index, Resume resume) {
         storage[index] = resume;
     }
 
-    public Resume[] doGetAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    public int getSize() {
+    public int size() {
         return size;
     }
 
@@ -51,7 +49,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         }
     }
 
-    protected abstract int getNumResume(String uuid);
+    protected abstract int getIndexResume(String uuid);
 
     protected abstract void deleteElementStorage(int position);
 

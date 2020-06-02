@@ -6,20 +6,8 @@ import ru.basejava.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    public void clear() {
-        doClear();
-    }
-
-    public int size() {
-        return getSize();
-    }
-
-    public Resume[] getAll() {
-        return doGetAll();
-    }
-
     public void update(Resume resume) {
-        int num = getNumResume(resume.toString());
+        int num = getIndexResume(resume.toString());
         if (num < 0) {
             throw new NotExistStorageException(resume.toString());
         } else {
@@ -28,7 +16,7 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public void save(Resume resume) {
-        int num = getNumResume(resume.toString());
+        int num = getIndexResume(resume.toString());
         if (num >= 0) {
             throw new ExistStorageException(resume.toString());
         } else {
@@ -37,7 +25,7 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public Resume get(String uuid) {
-        int num = getNumResume(uuid);
+        int num = getIndexResume(uuid);
         if (num < 0) {
             throw new NotExistStorageException(uuid);
         } else {
@@ -46,7 +34,7 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public void delete(String uuid) {
-        int num = getNumResume(uuid);
+        int num = getIndexResume(uuid);
         if (num < 0 ) {
             throw new NotExistStorageException(uuid);
         } else {
@@ -54,13 +42,7 @@ public abstract class AbstractStorage implements Storage {
         }
     }
 
-    protected abstract void doClear();
-
-    protected abstract int getSize();
-
-    protected abstract Resume[] doGetAll();
-
-    protected abstract int getNumResume(String uuid);
+    protected abstract int getIndexResume(String uuid);
 
     protected abstract void doUpdate(int index, Resume resume);
 

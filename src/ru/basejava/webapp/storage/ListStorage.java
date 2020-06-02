@@ -6,26 +6,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage{
-    List<Resume> list = new ArrayList<Resume>();
+    private List<Resume> list = new ArrayList<>();
 
     @Override
-    protected void doClear() {
+    public void clear() {
         list.clear();
     }
 
     @Override
-    protected int getSize() {
+    public int size() {
         return list.size();
     }
 
     @Override
-    protected Resume[] doGetAll() {
-        List<Resume> listNew = new ArrayList<Resume>(list);
-        return (Resume[]) listNew.toArray();
+    public Resume[] getAll() {
+        List<Resume> resumes = new ArrayList<>(list);
+        return (Resume[]) resumes.toArray();
     }
 
     @Override
-    protected int getNumResume(String uuid) {
+    protected int getIndexResume(String uuid) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).toString().equals(uuid)){
                 return i;
@@ -53,6 +53,5 @@ public class ListStorage extends AbstractStorage{
     protected void doDelete(int index) {
         list.remove(index);
     }
-
 
 }

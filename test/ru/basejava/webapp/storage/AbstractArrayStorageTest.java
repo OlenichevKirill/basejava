@@ -8,7 +8,7 @@ import ru.basejava.webapp.exception.NotExistStorageException;
 import ru.basejava.webapp.exception.StorageException;
 import ru.basejava.webapp.model.Resume;
 
-public abstract class AbstractArrayStorageTest {
+public abstract class AbstractArrayStorageTest extends AbstractStorageTest{
     private Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -21,6 +21,7 @@ public abstract class AbstractArrayStorageTest {
     private Resume resume4 = new Resume(UUID_4);
 
     public AbstractArrayStorageTest(Storage storage) {
+        super(storage);
         this.storage = storage;
     }
 
