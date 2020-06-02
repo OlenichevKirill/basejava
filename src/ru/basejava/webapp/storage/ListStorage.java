@@ -25,7 +25,7 @@ public class ListStorage extends AbstractStorage{
     }
 
     @Override
-    protected int getNumStorage(String uuid) {
+    protected int getNumResume(String uuid) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).toString().equals(uuid)){
                 return i;
@@ -40,7 +40,7 @@ public class ListStorage extends AbstractStorage{
     }
 
     @Override
-    protected void doSave(Resume resume) {
+    protected void doSave(Resume resume, int index) {
         list.add(resume)
 ;    }
 

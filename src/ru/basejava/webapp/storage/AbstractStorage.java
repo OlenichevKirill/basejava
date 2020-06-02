@@ -18,8 +18,8 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public void update(Resume resume) {
-        int num = getNumStorage(resume.toString());
-        if (num == -1) {
+        int num = getNumResume(resume.toString());
+        if (num < 0) {
             throw new NotExistStorageException(resume.toString());
         } else {
             doUpdate(num, resume);
@@ -27,17 +27,17 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public void save(Resume resume) {
-        int num = getNumStorage(resume.toString());
-        if (num != -1) {
+        int num = getNumResume(resume.toString());
+        if (num >= 0) {
             throw new NotExistStorageException(resume.toString());
         } else {
-            doSave(resume);
+            doSave(resume, num);
         }
     }
 
     public Resume get(String uuid) {
-        int num = getNumStorage(uuid);
-        if (num == -1) {
+        int num = getNumResume(uuid);
+        if (num < 0) {
             throw new NotExistStorageException(uuid);
         } else {
             return doGet(num);
@@ -45,8 +45,8 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public void delete(String uuid) {
-        int num = getNumStorage(uuid);
-        if (num == -1) {
+        int num = getNumResume(uuid);
+        if (num < 0 ) {
             throw new NotExistStorageException(uuid);
         } else {
             doDelete(num);
@@ -59,11 +59,11 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract Resume[] doGetAll();
 
-    protected abstract int getNumStorage(String uuid);
+    protected abstract int getNumResume(String uuid);
 
     protected abstract void doUpdate(int index, Resume resume);
 
-    protected abstract void doSave(Resume resume);
+    protected abstract void doSave(Resume resume, int index);
 
     protected abstract Resume doGet(int index);
 

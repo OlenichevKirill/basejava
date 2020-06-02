@@ -13,59 +13,39 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
 
-    public void clear() {
+    public void doClear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    public Resume get(String uuid) {
+    public Resume doGet(int index) {
         Resume res = null;
-        int num = getNumResume(uuid);
-        if (num >= 0) {
-            res = storage[num];
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+        res = storage[index];
         return res;
     }
 
-    public void update(Resume resume) {
-        int num = getNumResume(resume.toString());
-        if (num >= 0) {
-            storage[num] = resume;
-        } else {
-            throw new NotExistStorageException(resume.toString());
-        }
+    public void doUpdate(int index, Resume resume) {
+        storage[index] = resume;
     }
 
-    public Resume[] getAll() {
+    public Resume[] doGetAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    public int size() {
+    public int getSize() {
         return size;
     }
 
-    public void delete(String uuid) {
-        int num = getNumResume(uuid);
-        if (num >= 0) {
-            deleteElementStorage(num);
-            storage[size - 1] = null;
-            size--;
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+    public void doDelete(int index) {
+        deleteElementStorage(index);
+        storage[size - 1] = null;
+        size--;
     }
 
-    public void save(Resume resume) {
-        int num = getNumResume(resume.toString());
+    public void doSave(Resume resume, int index) {
         if (storage.length > size) {
-            if (num < 0) {
-                saveElementStorage(resume, num);
-                size++;
-            } else {
-                throw new ExistStorageException(resume.toString());
-            }
+            saveElementStorage(resume, index);
+            size++;
         } else {
             throw new StorageException("Storage overflow", resume.toString());
         }
