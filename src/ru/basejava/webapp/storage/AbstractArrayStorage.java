@@ -1,7 +1,5 @@
 package ru.basejava.webapp.storage;
 
-import ru.basejava.webapp.exception.ExistStorageException;
-import ru.basejava.webapp.exception.NotExistStorageException;
 import ru.basejava.webapp.exception.StorageException;
 import ru.basejava.webapp.model.Resume;
 
