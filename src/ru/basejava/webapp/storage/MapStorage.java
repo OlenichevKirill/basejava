@@ -11,16 +11,12 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected String getIndexResume(String uuid) {
-        if (map.containsKey(uuid)) {
-            return uuid;
-        } else {
-            return null;
-        }
+        return uuid;
     }
 
     @Override
     protected boolean checkIndex(Object index) {
-        if (index == null) {
+        if (!map.containsKey(index)) {
             return true;
         } else {
             return false;

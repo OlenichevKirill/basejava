@@ -7,11 +7,12 @@ import ru.basejava.webapp.exception.ExistStorageException;
 import ru.basejava.webapp.exception.NotExistStorageException;
 import ru.basejava.webapp.model.Resume;
 
+import java.util.Arrays;
+
 public abstract class AbstractStorageTest {
     protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
-
     private Resume resume1 = new Resume(UUID_1);
     private static final String UUID_2 = "uuid2";
     private Resume resume2 = new Resume(UUID_2);
@@ -46,6 +47,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAll() {
         Resume[] arrayResume = storage.getAll();
+        Arrays.sort(arrayResume);
         Assert.assertEquals(3, arrayResume.length);
         Resume[] arrayTest = new Resume[3];
         arrayTest[0] = resume1;
