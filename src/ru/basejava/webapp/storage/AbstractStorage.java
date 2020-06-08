@@ -7,48 +7,50 @@ import ru.basejava.webapp.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     public void update(Resume resume) {
-        int num = getIndexResume(resume.toString());
-        if (num < 0) {
+        Object index = getIndexResume(resume.toString());
+        if (checkIndex(index)) {
             throw new NotExistStorageException(resume.toString());
         } else {
-            doUpdate(num, resume);
+            doUpdate(index, resume);
         }
     }
 
     public void save(Resume resume) {
-        int num = getIndexResume(resume.toString());
-        if (num >= 0) {
+        Object index = getIndexResume(resume.toString());
+        if (!checkIndex(index)) {
             throw new ExistStorageException(resume.toString());
         } else {
-            doSave(resume, num);
+            doSave(resume, index);
         }
     }
 
     public Resume get(String uuid) {
-        int num = getIndexResume(uuid);
-        if (num < 0) {
+        Object index = getIndexResume(uuid);
+        if (checkIndex(index)) {
             throw new NotExistStorageException(uuid);
         } else {
-            return doGet(num);
+            return doGet(index);
         }
     }
 
     public void delete(String uuid) {
-        int num = getIndexResume(uuid);
-        if (num < 0 ) {
+        Object index = getIndexResume(uuid);
+        if (checkIndex(index)) {
             throw new NotExistStorageException(uuid);
         } else {
-            doDelete(num);
+            doDelete(index);
         }
     }
 
-    protected abstract int getIndexResume(String uuid);
+    protected abstract Object getIndexResume(String uuid);
 
-    protected abstract void doUpdate(int index, Resume resume);
+    protected abstract void doUpdate(Object index, Resume resume);
 
-    protected abstract void doSave(Resume resume, int index);
+    protected abstract void doSave(Resume resume, Object index);
 
-    protected abstract Resume doGet(int index);
+    protected abstract Resume doGet(Object index);
 
-    protected abstract void doDelete(int index);
+    protected abstract void doDelete(Object index);
+
+    protected abstract boolean checkIndex(Object index);
 }

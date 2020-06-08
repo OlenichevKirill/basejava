@@ -5,7 +5,7 @@ import ru.basejava.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListStorage extends AbstractStorage{
+public class ListStorage extends AbstractStorage {
     private List<Resume> list = new ArrayList<>();
 
     @Override
@@ -25,9 +25,9 @@ public class ListStorage extends AbstractStorage{
     }
 
     @Override
-    protected int getIndexResume(String uuid) {
+    protected Integer getIndexResume(String uuid) {
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).toString().equals(uuid)){
+            if (list.get(i).toString().equals(uuid)) {
                 return i;
             }
         }
@@ -35,23 +35,33 @@ public class ListStorage extends AbstractStorage{
     }
 
     @Override
-    protected void doUpdate(int index, Resume resume) {
-        list.set(index, resume);
+    protected void doUpdate(Object index, Resume resume) {
+        list.set((Integer) index, resume);
     }
 
     @Override
-    protected void doSave(Resume resume, int index) {
-        list.add(resume)
-;    }
-
-    @Override
-    protected Resume doGet(int index) {
-        return list.get(index);
+    protected void doSave(Resume resume, Object index) {
+        list.add(resume);
     }
 
     @Override
-    protected void doDelete(int index) {
-        list.remove(index);
+    protected Resume doGet(Object index) {
+        return list.get((Integer) index);
+    }
+
+    @Override
+    protected void doDelete(Object index) {
+        int num = (Integer) index;
+        list.remove(num);
+    }
+
+    @Override
+    protected boolean checkIndex(Object index) {
+        if ((Integer) index < 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
