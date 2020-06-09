@@ -7,50 +7,50 @@ import ru.basejava.webapp.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     public void update(Resume resume) {
-        Object index = getIndexResume(resume.toString());
-        if (checkIndex(index)) {
-            throw new NotExistStorageException(resume.toString());
-        } else {
-            doUpdate(index, resume);
-        }
+        Object key = getKeyResume(resume.toString());
+        checkNotExistStorageException(key, resume.toString());
+        doUpdate(key, resume);
     }
 
     public void save(Resume resume) {
-        Object index = getIndexResume(resume.toString());
-        if (!checkIndex(index)) {
-            throw new ExistStorageException(resume.toString());
-        } else {
-            doSave(resume, index);
-        }
+        Object key = getKeyResume(resume.toString());
+        checkExistStorageException(key, resume.toString());
+        doSave(resume, key);
     }
 
     public Resume get(String uuid) {
-        Object index = getIndexResume(uuid);
-        if (checkIndex(index)) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            return doGet(index);
-        }
+        Object key = getKeyResume(uuid);
+        checkNotExistStorageException(key, uuid);
+        return doGet(key);
     }
 
     public void delete(String uuid) {
-        Object index = getIndexResume(uuid);
-        if (checkIndex(index)) {
+        Object key = getKeyResume(uuid);
+        checkNotExistStorageException(key, uuid);
+        doDelete(key);
+    }
+
+    private void checkNotExistStorageException(Object key, String uuid) {
+        if (checkKey(key)) {
             throw new NotExistStorageException(uuid);
-        } else {
-            doDelete(index);
         }
     }
 
-    protected abstract Object getIndexResume(String uuid);
+    private void checkExistStorageException(Object key, String uuid) {
+        if (!checkKey(key)) {
+            throw new ExistStorageException(uuid);
+        }
+    }
 
-    protected abstract void doUpdate(Object index, Resume resume);
+    protected abstract Object getKeyResume(String uuid);
 
-    protected abstract void doSave(Resume resume, Object index);
+    protected abstract void doUpdate(Object key, Resume resume);
 
-    protected abstract Resume doGet(Object index);
+    protected abstract void doSave(Resume resume, Object key);
 
-    protected abstract void doDelete(Object index);
+    protected abstract Resume doGet(Object key);
 
-    protected abstract boolean checkIndex(Object index);
+    protected abstract void doDelete(Object key);
+
+    protected abstract boolean checkKey(Object key);
 }

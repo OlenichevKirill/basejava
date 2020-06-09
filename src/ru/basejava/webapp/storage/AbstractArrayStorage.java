@@ -32,15 +32,15 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    public void doDelete(Object index) {
-        deleteElementStorage((Integer) index);
+    public void doDelete(Object key) {
+        deleteElementStorage((Integer) key);
         storage[size - 1] = null;
         size--;
     }
 
-    public void doSave(Resume resume, Object index) {
+    public void doSave(Resume resume, Object key) {
         if (storage.length > size) {
-            saveElementStorage(resume, (Integer) index);
+            saveElementStorage(resume, (Integer) key);
             size++;
         } else {
             throw new StorageException("Storage overflow", resume.toString());
@@ -48,15 +48,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean checkIndex(Object index) {
-        if ((Integer) index < 0) {
-            return true;
-        } else {
-            return false;
-        }
+    protected boolean checkKey(Object index) {
+        return (Integer) index < 0;
     }
 
-    protected abstract Integer getIndexResume(String uuid);
+    protected abstract Integer getKeyResume(String uuid);
 
     protected abstract void deleteElementStorage(int position);
 

@@ -10,7 +10,7 @@ import ru.basejava.webapp.model.Resume;
 import java.util.Arrays;
 
 public abstract class AbstractStorageTest {
-    protected Storage storage;
+    Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private Resume resume1 = new Resume(UUID_1);
@@ -46,14 +46,11 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAll() {
-        Resume[] arrayResume = storage.getAll();
-        Arrays.sort(arrayResume);
-        Assert.assertEquals(3, arrayResume.length);
-        Resume[] arrayTest = new Resume[3];
-        arrayTest[0] = resume1;
-        arrayTest[1] = resume2;
-        arrayTest[2] = resume3;
-        Assert.assertArrayEquals(arrayTest, arrayResume);
+        Resume[] actualResumes = storage.getAll();
+        Arrays.sort(actualResumes);
+        Assert.assertEquals(3, actualResumes.length);
+        Resume[] expectedResumes = {resume1, resume2, resume3};
+        Assert.assertArrayEquals(expectedResumes, actualResumes);
     }
 
     @Test
