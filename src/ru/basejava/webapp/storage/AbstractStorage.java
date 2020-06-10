@@ -7,39 +7,39 @@ import ru.basejava.webapp.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     public void update(Resume resume) {
-        Object key = getKeyResume(resume.toString());
-        checkNotExistStorageException(key, resume.toString());
+        Object key = getExistedKey(resume.toString());
         doUpdate(key, resume);
     }
 
     public void save(Resume resume) {
-        Object key = getKeyResume(resume.toString());
-        checkExistStorageException(key, resume.toString());
+        Object key = getNotExistedKey(resume.toString());
         doSave(resume, key);
     }
 
     public Resume get(String uuid) {
-        Object key = getKeyResume(uuid);
-        checkNotExistStorageException(key, uuid);
+        Object key = getExistedKey(uuid);
         return doGet(key);
     }
 
     public void delete(String uuid) {
-        Object key = getKeyResume(uuid);
-        checkNotExistStorageException(key, uuid);
+        Object key = getExistedKey(uuid);
         doDelete(key);
     }
 
-    private void checkNotExistStorageException(Object key, String uuid) {
+    private Object getExistedKey(String uuid) {
+        Object key = getKeyResume(uuid);
         if (checkKey(key)) {
             throw new NotExistStorageException(uuid);
         }
+        return key;
     }
 
-    private void checkExistStorageException(Object key, String uuid) {
+    private Object getNotExistedKey(String uuid) {
+        Object key = getKeyResume(uuid);
         if (!checkKey(key)) {
             throw new ExistStorageException(uuid);
         }
+        return key;
     }
 
     protected abstract Object getKeyResume(String uuid);
