@@ -8,18 +8,23 @@ import ru.basejava.webapp.exception.NotExistStorageException;
 import ru.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractStorageTest {
     Storage storage;
 
     private static final String UUID_1 = "uuid1";
-    private Resume resume1 = new Resume(UUID_1);
+    private String fullName_1 = "Tom";
+    private Resume resume1 = new Resume(UUID_1, fullName_1);
     private static final String UUID_2 = "uuid2";
-    private Resume resume2 = new Resume(UUID_2);
+    private String fullName_2 = "Bill";
+    private Resume resume2 = new Resume(UUID_2, fullName_2);
     private static final String UUID_3 = "uuid3";
-    private Resume resume3 = new Resume(UUID_3);
+    private String fullName_3 = "Tom";
+    private Resume resume3 = new Resume(UUID_3, fullName_3);
     private static final String UUID_4 = "uuid4";
-    private Resume resume4 = new Resume(UUID_4);
+    private String fullName_4 = "Kirill";
+    private Resume resume4 = new Resume(UUID_4, fullName_4);
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -28,9 +33,9 @@ public abstract class AbstractStorageTest {
     @Before
     public void setUp() throws Exception {
         storage.clear();
-        storage.save(resume1);
-        storage.save(resume2);
         storage.save(resume3);
+        storage.save(resume2);
+        storage.save(resume1);
     }
 
     @Test
@@ -45,12 +50,11 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
-        Resume[] actualResumes = storage.getAll();
-        Arrays.sort(actualResumes);
-        Assert.assertEquals(3, actualResumes.length);
-        Resume[] expectedResumes = {resume1, resume2, resume3};
-        Assert.assertArrayEquals(expectedResumes, actualResumes);
+    public void getAllSorted() {
+        List<Resume> listResume = storage.getAllSorted();
+        Assert.assertEquals(3, listResume.size());
+        List<Resume> expectedResumes = Arrays.asList(resume2, resume1, resume3);
+        Assert.assertEquals(expectedResumes, listResume);
     }
 
     @Test
@@ -66,7 +70,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume resumeTest = new Resume(UUID_2);
+        Resume resumeTest = new Resume(UUID_2, "Bill");
         storage.update(resumeTest);
         Assert.assertEquals(resumeTest, storage.get(UUID_2));
     }
