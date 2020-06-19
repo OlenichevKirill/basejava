@@ -11,7 +11,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     protected Integer getKeyResume(String uuid) {
         int num = -1;
         for (int i = 0; i < size; i++) {
-            if (storage[i].toString().equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 num = i;
             }
         }

@@ -6,7 +6,7 @@ import ru.basejava.webapp.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -17,41 +17,41 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
-    public Resume doGet(Object index) {
-        return storage[(int) index];
+    public Resume doGet(Integer index) {
+        return storage[index];
     }
 
-    public void doUpdate(Object index, Resume resume) {
-        storage[(int) index] = resume;
+    public void doUpdate(Integer index, Resume resume) {
+        storage[index] = resume;
     }
 
     @Override
     protected List<Resume> getListResume() {
         return Arrays.asList(Arrays.copyOf(storage, size));
-    };
+    }
 
     public int size() {
         return size;
     }
 
-    public void doDelete(Object key) {
-        deleteElementStorage((Integer) key);
+    public void doDelete(Integer key) {
+        deleteElementStorage(key);
         storage[size - 1] = null;
         size--;
     }
 
-    public void doSave(Resume resume, Object key) {
+    public void doSave(Resume resume, Integer key) {
         if (storage.length > size) {
-            saveElementStorage(resume, (Integer) key);
+            saveElementStorage(resume, key);
             size++;
         } else {
-            throw new StorageException("Storage overflow", resume.toString());
+            throw new StorageException("Storage overflow", resume.getUuid());
         }
     }
 
     @Override
-    protected boolean checkKey(Object index) {
-        return (Integer) index < 0;
+    protected boolean checkKey(Integer index) {
+        return index < 0;
     }
 
     protected abstract Integer getKeyResume(String uuid);
