@@ -1,5 +1,7 @@
 package ru.basejava.webapp.model;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -11,6 +13,9 @@ public class Resume {
     // Unique identifier
     private final String uuid;
     private String fullName;
+
+    private Map<ContactType, String> contact = new EnumMap<>(ContactType.class);
+    private Map<SectionType, Section> section = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
