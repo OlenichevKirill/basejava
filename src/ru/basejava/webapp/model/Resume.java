@@ -36,6 +36,14 @@ public class Resume {
         return fullName;
     }
 
+    public Map<ContactType, String> getContact() {
+        return contact;
+    }
+
+    public Map<SectionType, Section> getSection() {
+        return section;
+    }
+
     @Override
     public String toString() {
         return uuid + '(' + fullName + ')';
