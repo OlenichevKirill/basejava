@@ -1,10 +1,10 @@
 package ru.basejava.webapp.model;
 
-public class TextAbstractSection extends AbstractSection {
+public class TextSection extends AbstractSection {
 
     private String text;
 
-    public TextAbstractSection(String text) {
+    public TextSection(String text) {
         this.text = text;
     }
 

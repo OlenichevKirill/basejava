@@ -2,11 +2,11 @@ package ru.basejava.webapp.model;
 
 import java.util.List;
 
-public class InstitutionAbstractSection extends AbstractSection {
+public class InstitutionSection extends AbstractSection {
 
     private List<Institution> institutions;
 
-    public InstitutionAbstractSection(List<Institution> institutions) {
+    public InstitutionSection(List<Institution> institutions) {
         this.institutions = institutions;
     }
 
