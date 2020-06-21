@@ -1,13 +1,12 @@
 package ru.basejava.webapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ListSection extends Section {
+public class ListAbstractSection extends AbstractSection {
 
-    private List<String> list = new ArrayList<>();
+    private List<String> list;
 
-    public ListSection(List<String> list) {
+    public ListAbstractSection(List<String> list) {
         this.list = list;
     }
 

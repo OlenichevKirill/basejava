@@ -15,7 +15,7 @@ public class Resume {
     private String fullName;
 
     private Map<ContactType, String> contact = new EnumMap<>(ContactType.class);
-    private Map<SectionType, Section> section = new EnumMap<>(SectionType.class);
+    private Map<SectionType, AbstractSection> section = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -40,7 +40,7 @@ public class Resume {
         return contact;
     }
 
-    public Map<SectionType, Section> getSection() {
+    public Map<SectionType, AbstractSection> getSection() {
         return section;
     }
 
@@ -57,13 +57,18 @@ public class Resume {
         Resume resume = (Resume) o;
 
         if (!uuid.equals(resume.uuid)) return false;
-        return fullName.equals(resume.fullName);
+        if (!fullName.equals(resume.fullName)) return false;
+        if (!contact.equals(resume.contact)) return false;
+        return section.equals(resume.section);
     }
 
     @Override
     public int hashCode() {
         int result = uuid.hashCode();
         result = 31 * result + fullName.hashCode();
+        result = 31 * result + contact.hashCode();
+        result = 31 * result + section.hashCode();
         return result;
     }
+
 }
