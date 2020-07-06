@@ -32,18 +32,26 @@ public class MainFile {
 
         // ДЗ вывод каталогов и фалов через рекурсию
         MainFile recursGetFileAndDir = new MainFile();
-        recursGetFileAndDir.getFileAndDirectory("D:\\basejava");
+        recursGetFileAndDir.getFileAndDirectory("D:\\basejava\\src", "");
     }
 
-    public void getFileAndDirectory(String path){
+    public void getFileAndDirectory(String path, String indent) {
         File dir = new File(path);
+
         if (dir.listFiles() != null) {
-            for (File file: dir.listFiles()){
-                if (file.isDirectory()){
-                    System.out.println("Dir: " + file.getAbsolutePath());
-                    getFileAndDirectory(file.getAbsolutePath());
-                } else {
-                    System.out.println("File: " + file.getAbsoluteFile());
+            for (File file : dir.listFiles()) {
+                if (!file.isDirectory()) {
+                    System.out.println(indent + "\t" + "File: " + file.getName());
+                }
+            }
+
+            if (dir.listFiles() != null) {
+                indent += "  ";
+                for (File file : dir.listFiles()) {
+                    if (file.isDirectory()) {
+                        System.out.println(indent + "Dir: " + file.getName());
+                        getFileAndDirectory(file.getAbsolutePath(), indent);
+                    }
                 }
             }
         }
