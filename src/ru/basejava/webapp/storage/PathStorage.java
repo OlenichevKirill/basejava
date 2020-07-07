@@ -12,12 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
     private SerializationStrategy strategy;
 
-    protected AbstractPathStorage(String dir, SerializationStrategy strategy) {
+    protected PathStorage(String dir, SerializationStrategy strategy) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
@@ -75,33 +76,33 @@ public class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getAll() {
-        try {
-            Path[] pathMas = Files.list(directory).collect(Collectors.toList()).toArray(new Path[0]);
-            List<Resume> list = new ArrayList<>();
-            for (int i = 0; i < pathMas.length; i++) {
-                list.add(doGet(pathMas[i]));
-            }
-            return list;
-        } catch (IOException e) {
-            throw new StorageException("Path[] is null", null);
+        Path[] pathMas = getListPath(getStreamPath(directory)).toArray(new Path[0]);
+        List<Resume> list = new ArrayList<>();
+        for (int i = 0; i < pathMas.length; i++) {
+            list.add(doGet(pathMas[i]));
         }
+        return list;
     }
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
-        }
+        getStreamPath(directory).forEach(this::doDelete);
     }
 
     @Override
     public int size() {
+        return getListPath(getStreamPath(directory)).size();
+    }
+
+    public Stream<Path> getStreamPath(Path directory) {
         try {
-            return Files.list(directory).collect(Collectors.toList()).size();
+            return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("Path no size", null);
+            throw new StorageException("Path stream error", null);
         }
+    }
+
+    public List<Path> getListPath(Stream<Path> stream) {
+        return stream.collect(Collectors.toList());
     }
 }
