@@ -39,20 +39,15 @@ public class Institution implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Institution that = (Institution) o;
-
-        if (!homePage.equals(that.homePage)) return false;
-        return positions.equals(that.positions);
+        return homePage.equals(that.homePage) &&
+                positions.equals(that.positions);
     }
 
     @Override
     public int hashCode() {
-        int result = homePage.hashCode();
-        result = 31 * result + positions.hashCode();
-        return result;
+        return Objects.hash(homePage, positions);
     }
-
 
     @Override
     public String toString() {
@@ -112,22 +107,16 @@ public class Institution implements Serializable {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-
             Position position = (Position) o;
-
-            if (!startDate.equals(position.startDate)) return false;
-            if (!endDate.equals(position.endDate)) return false;
-            if (!title.equals(position.title)) return false;
-            return description != null ? description.equals(position.description) : position.description == null;
+            return startDate.equals(position.startDate) &&
+                    endDate.equals(position.endDate) &&
+                    title.equals(position.title) &&
+                    Objects.equals(description, position.description);
         }
 
         @Override
         public int hashCode() {
-            int result = startDate.hashCode();
-            result = 31 * result + endDate.hashCode();
-            result = 31 * result + title.hashCode();
-            result = 31 * result + (description != null ? description.hashCode() : 0);
-            return result;
+            return Objects.hash(startDate, endDate, title, description);
         }
 
         @Override

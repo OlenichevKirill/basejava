@@ -45,7 +45,7 @@ public class MainFile {
                     System.out.println(indent + "Dir: " + file.getName());
                     getFileAndDirectory(file.getAbsolutePath(), indent);
                 } else {
-                    System.out.println(indent  + "File: " + file.getName());
+                    System.out.println(indent + "File: " + file.getName());
                 }
             }
         }

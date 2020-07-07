@@ -27,6 +27,4 @@ public class ArrayStorage extends AbstractArrayStorage {
     protected void saveElementStorage(Resume resume, int position) {
         storage[size] = resume;
     }
-
-
 }

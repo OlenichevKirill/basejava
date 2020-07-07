@@ -39,14 +39,12 @@ public class InstitutionSection extends AbstractSection {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         InstitutionSection that = (InstitutionSection) o;
-
         return institutions.equals(that.institutions);
     }
 
     @Override
     public int hashCode() {
-        return institutions.hashCode();
+        return Objects.hash(institutions);
     }
 }
