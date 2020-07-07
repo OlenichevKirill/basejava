@@ -26,7 +26,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected List<Resume> getListResume() {
+    protected List<Resume> getAll() {
         return Arrays.asList(Arrays.copyOf(storage, size));
     }
 
@@ -50,11 +50,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected boolean checkKey(Integer index) {
-        return index < 0;
+    protected boolean isExist(Integer index) {
+        return index >= 0;
     }
 
-    protected abstract Integer getKeyResume(String uuid);
+    protected abstract Integer getSearchKey(String uuid);
 
     protected abstract void deleteElementStorage(int position);
 

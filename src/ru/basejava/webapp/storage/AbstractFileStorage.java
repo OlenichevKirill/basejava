@@ -2,6 +2,7 @@ package ru.basejava.webapp.storage;
 
 import ru.basejava.webapp.exception.StorageException;
 import ru.basejava.webapp.model.Resume;
+import ru.basejava.webapp.storage.SerializationStrategy.SerializationStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class AbstractFileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected File getKeyResume(String uuid) {
+    protected File getSearchKey(String uuid) {
         return new File(directory, uuid);
     }
 
@@ -65,12 +66,12 @@ public class AbstractFileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected boolean checkKey(File file) {
-        return !file.exists();
+    protected boolean isExist(File file) {
+        return file.exists();
     }
 
     @Override
-    protected List<Resume> getListResume() {
+    protected List<Resume> getAll() {
         File[] files = directory.listFiles();
         if (files == null) {
             throw new StorageException("Directory read error", null);

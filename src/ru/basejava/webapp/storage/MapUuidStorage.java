@@ -12,13 +12,13 @@ public class MapUuidStorage extends AbstractStorage<String> {
     private final Map<String, Resume> map = new HashMap<>();
 
     @Override
-    protected String getKeyResume(String uuid) {
+    protected String getSearchKey(String uuid) {
         return uuid;
     }
 
     @Override
-    protected boolean checkKey(String key) {
-        return !map.containsKey(key);
+    protected boolean isExist(String key) {
+        return map.containsKey(key);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MapUuidStorage extends AbstractStorage<String> {
     }
 
     @Override
-    protected List<Resume> getListResume() {
+    protected List<Resume> getAll() {
         return new ArrayList<>(map.values());
     }
 

@@ -12,7 +12,7 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     Map<String, Resume> map = new HashMap<>();
 
     @Override
-    protected Resume getKeyResume(String uuid) {
+    protected Resume getSearchKey(String uuid) {
         return map.get(uuid);
     }
 
@@ -37,8 +37,8 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected boolean checkKey(Resume key) {
-        return key == null;
+    protected boolean isExist(Resume key) {
+        return key != null;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected List<Resume> getListResume() {
+    protected List<Resume> getAll() {
         return new ArrayList<>(map.values());
     }
 

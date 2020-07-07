@@ -19,12 +19,12 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected List<Resume> getListResume() {
+    protected List<Resume> getAll() {
         return new ArrayList<>(list);
     }
 
     @Override
-    protected Integer getKeyResume(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -55,7 +55,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected boolean checkKey(Integer key) {
-        return key < 0;
+    protected boolean isExist(Integer key) {
+        return key >= 0;
     }
 }

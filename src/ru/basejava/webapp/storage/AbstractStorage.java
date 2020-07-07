@@ -41,14 +41,14 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     public List<Resume> getAllSorted() {
         LOG.info("getAllSorted");
-        List<Resume> listResume = getListResume();
+        List<Resume> listResume = getAll();
         Collections.sort(listResume, RESUME_COMPARATOR);
         return listResume;
     }
 
     private SK getExistedKey(String uuid) {
-        SK key = getKeyResume(uuid);
-        if (checkKey(key)) {
+        SK key = getSearchKey(uuid);
+        if (!isExist(key)) {
             LOG.warning("Resume " + uuid + " not exist");
             throw new NotExistStorageException(uuid);
         }
@@ -56,15 +56,15 @@ public abstract class AbstractStorage<SK> implements Storage {
     }
 
     private SK getNotExistedKey(String uuid) {
-        SK key = getKeyResume(uuid);
-        if (!checkKey(key)) {
+        SK key = getSearchKey(uuid);
+        if (isExist(key)) {
             LOG.warning("Resume " + uuid + " already exist");
             throw new ExistStorageException(uuid);
         }
         return key;
     }
 
-    protected abstract SK getKeyResume(String uuid);
+    protected abstract SK getSearchKey(String uuid);
 
     protected abstract void doUpdate(SK key, Resume resume);
 
@@ -74,7 +74,7 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     protected abstract void doDelete(SK key);
 
-    protected abstract boolean checkKey(SK key);
+    protected abstract boolean isExist(SK key);
 
-    protected abstract List<Resume> getListResume();
+    protected abstract List<Resume> getAll();
 }

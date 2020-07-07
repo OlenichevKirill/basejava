@@ -2,6 +2,7 @@ package ru.basejava.webapp.storage;
 
 import ru.basejava.webapp.exception.StorageException;
 import ru.basejava.webapp.model.Resume;
+import ru.basejava.webapp.storage.SerializationStrategy.SerializationStrategy;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -26,7 +27,7 @@ public class AbstractPathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected Path getKeyResume(String uuid) {
+    protected Path getSearchKey(String uuid) {
         return directory.resolve(uuid);
     }
 
@@ -68,12 +69,12 @@ public class AbstractPathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected boolean checkKey(Path path) {
-        return Files.notExists(path);
+    protected boolean isExist(Path path) {
+        return Files.exists(path);
     }
 
     @Override
-    protected List<Resume> getListResume() {
+    protected List<Resume> getAll() {
         try {
             Path[] pathMas = Files.list(directory).collect(Collectors.toList()).toArray(new Path[0]);
             List<Resume> list = new ArrayList<>();
