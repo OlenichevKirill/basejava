@@ -5,13 +5,14 @@ import ru.basejava.webapp.model.Resume;
 import ru.basejava.webapp.storage.SerializationStrategy.SerializationStrategy;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class FileStorage extends AbstractStorage<File> {
-    private File directory;
-    private SerializationStrategy strategy;
+    private final File directory;
+    private final SerializationStrategy strategy;
 
     protected FileStorage(File directory, SerializationStrategy strategy) {
         Objects.requireNonNull(directory, "directory must not be null");
@@ -72,32 +73,23 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> getAll() {
-        File[] files = getArrayFiles(directory);
-        List<Resume> list = new ArrayList<>(files.length);
-        for (File file : files) {
-            list.add(doGet(file));
-        }
-        return list;
+        return Arrays.stream(getFiles()).map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
     public void clear() {
-        File[] files = getArrayFiles(directory);
-        for (File file : files) {
-            doDelete(file);
-        }
+        Arrays.stream(getFiles()).forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        File[] files = getArrayFiles(directory);
-        return files.length;
+        return getFiles().length;
     }
 
-    public File[] getArrayFiles(File directory) {
+    public File[] getFiles() {
         File[] files = directory.listFiles();
         if (files == null) {
-            throw new StorageException("Directory == null", null);
+            throw new StorageException("Empty list of files");
         }
         return files;
     }

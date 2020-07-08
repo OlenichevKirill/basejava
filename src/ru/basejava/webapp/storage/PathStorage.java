@@ -4,19 +4,20 @@ import ru.basejava.webapp.exception.StorageException;
 import ru.basejava.webapp.model.Resume;
 import ru.basejava.webapp.storage.SerializationStrategy.SerializationStrategy;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
-    private Path directory;
-    private SerializationStrategy strategy;
+    private final Path directory;
+    private final SerializationStrategy strategy;
 
     protected PathStorage(String dir, SerializationStrategy strategy) {
         directory = Paths.get(dir);
@@ -76,33 +77,24 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getAll() {
-        Path[] pathMas = getListPath(getStreamPath(directory)).toArray(new Path[0]);
-        List<Resume> list = new ArrayList<>();
-        for (int i = 0; i < pathMas.length; i++) {
-            list.add(doGet(pathMas[i]));
-        }
-        return list;
+        return getPath().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
     public void clear() {
-        getStreamPath(directory).forEach(this::doDelete);
+        getPath().forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        return getListPath(getStreamPath(directory)).size();
+        return (int) getPath().count();
     }
 
-    public Stream<Path> getStreamPath(Path directory) {
+    public Stream<Path> getPath() {
         try {
             return Files.list(directory);
         } catch (IOException e) {
-            throw new StorageException("Path stream error", null);
+            throw new StorageException("Path stream error");
         }
-    }
-
-    public List<Path> getListPath(Stream<Path> stream) {
-        return stream.collect(Collectors.toList());
     }
 }
