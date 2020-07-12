@@ -9,6 +9,9 @@ public class InstitutionSection extends AbstractSection {
 
     private List<Institution> institutions;
 
+    public InstitutionSection() {
+    }
+
     public InstitutionSection(Institution... institutions) {
         this(Arrays.asList(institutions));
     }

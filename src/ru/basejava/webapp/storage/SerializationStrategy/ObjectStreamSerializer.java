@@ -6,7 +6,7 @@ import ru.basejava.webapp.storage.SerializationStrategy.SerializationStrategy;
 
 import java.io.*;
 
-public class ObjectStreamStorage implements SerializationStrategy {
+public class ObjectStreamSerializer implements SerializationStrategy {
 
     @Override
     public void doWrite(Resume resume, OutputStream os) throws IOException {
