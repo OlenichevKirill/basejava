@@ -28,7 +28,7 @@ public class ResumeTestData {
         resume.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
         resume.addContact(ContactType.HOMEPAGE, "http://gkislin.ru");
 
-        for (Map.Entry<ContactType, String> entry : resume.getContact().entrySet()) {
+        for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
             System.out.println(entry.getKey().getTitle() + ": " + entry.getValue());
         }
 
@@ -63,7 +63,7 @@ public class ResumeTestData {
         List<Institution> institutionsEducation = Arrays.asList(institutionEducation1, institutionEducation2);
         resume.addSection(SectionType.EDUCATION, new InstitutionSection(institutionsEducation));
 
-        for (Map.Entry<SectionType, AbstractSection> entry : resume.getSection().entrySet()) {
+        for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
             System.out.println(entry.getKey().getTitle());
             System.out.println(entry.getValue().toString());
             System.out.println("");
@@ -79,6 +79,7 @@ public class ResumeTestData {
         resume.addContact(ContactType.GITHUB, "https://github.com/gkislin");
         resume.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/grigory-kislin");
         resume.addContact(ContactType.HOMEPAGE, "http://gkislin.ru");
+
 
         resume.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
         resume.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
