@@ -21,7 +21,6 @@ public class DataStreamSerializer implements SerializationStrategy {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             }
-            // TODO implements sections
             Map<SectionType, AbstractSection> sections = resume.getSections();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
@@ -36,30 +35,20 @@ public class DataStreamSerializer implements SerializationStrategy {
                         break;
                     case "ACHIEVEMENT":
                     case "QUALIFICATIONS":
-                        List<String> listString = ((ListSection) section).getList();
-                        dos.writeInt(listString.size());
-                        for (String list : listString) {
-                            dos.writeUTF(list);
-                        }
+                        writeSourceData(dos, ((ListSection) section).getList(), dos::writeUTF);
                         break;
                     case "EXPERIENCE":
                     case "EDUCATION":
-
-                        List<Institution> institutions = ((InstitutionSection) section).getInstitutions();
-                        dos.writeInt(institutions.size());
-                        for (Institution org : institutions) {
+                        writeSourceData(dos, ((InstitutionSection) section).getInstitutions(), (org) -> {
                             dos.writeUTF(org.getHomePage().getName());
                             dos.writeUTF(org.getHomePage().getUrl());
-
-                            List<Institution.Position> positions = org.getPositions();
-                            dos.writeInt(positions.size());
-                            for (Institution.Position pos : positions) {
+                            writeSourceData(dos, org.getPositions(), (pos) -> {
                                 dos.writeUTF(pos.getStartDate().toString());
                                 dos.writeUTF(pos.getEndDate().toString());
                                 dos.writeUTF(pos.getTitle());
                                 dos.writeUTF(pos.getDescription());
-                            }
-                        }
+                            });
+                        });
                         break;
                 }
             }
@@ -76,7 +65,6 @@ public class DataStreamSerializer implements SerializationStrategy {
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-            // TODO implements sections
             int sizeSection = dis.readInt();
             for (int i = 0; i < sizeSection; i++) {
                 SectionType type = SectionType.valueOf(dis.readUTF());
@@ -88,37 +76,36 @@ public class DataStreamSerializer implements SerializationStrategy {
                         break;
                     case "ACHIEVEMENT":
                     case "QUALIFICATIONS": {
-                        int sizeList = dis.readInt();
-                        List<String> list = new ArrayList<>();
-                        for (int j = 0; j < sizeList; j++) {
-                            list.add(dis.readUTF());
-                        }
-                        resume.addSection(type, new ListSection(list));
+                        resume.addSection(type, new ListSection(readSourceData(dis, dis::readUTF)));
                         break;
                     }
                     case "EXPERIENCE":
                     case "EDUCATION": {
-
-                        int sizeList = dis.readInt();
-                        List<Institution> listOrg = new ArrayList<>();
-                        for (int k = 0; k < sizeList; k++) {
-                            String name = dis.readUTF();
-                            String url = dis.readUTF();
-                            Link link = new Link(name, url);
-
-                            int sizePos = dis.readInt();
-                            List<Institution.Position> listPos = new ArrayList<>();
-                            for (int l = 0; l < sizePos; l++) {
-                                listPos.add(new Institution.Position(LocalDate.parse(dis.readUTF()), LocalDate.parse(dis.readUTF()), dis.readUTF(), dis.readUTF()));
-                            }
-                            listOrg.add(new Institution(link, listPos));
-                        }
-                        resume.addSection(type, new InstitutionSection(listOrg));
+                        resume.addSection(type, new InstitutionSection(readSourceData(dis, () ->
+                                new Institution(new Link(dis.readUTF(), dis.readUTF()), readSourceData(dis, () ->
+                                        new Institution.Position(LocalDate.parse(dis.readUTF()), LocalDate.parse(dis.readUTF()), dis.readUTF(), dis.readUTF())))
+                        )));
                         break;
                     }
                 }
             }
             return resume;
         }
+    }
+
+    private <T> void writeSourceData(DataOutputStream dos, List<T> list, WriteData<T> writer) throws IOException {
+        dos.writeInt(list.size());
+        for (T t : list) {
+            writer.write(t);
+        }
+    }
+
+    private <T> List<T> readSourceData(DataInputStream dis, ReadData<T> reader) throws IOException {
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>();
+        for (int j = 0; j < size; j++) {
+            list.add(reader.read());
+        }
+        return list;
     }
 }

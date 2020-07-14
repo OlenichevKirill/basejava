@@ -80,11 +80,10 @@ public abstract class AbstractStorageTest {
         storage.update(resume4);
     }
 
-    @Test(expected = NotExistStorageException.class)
+    @Test
     public void delete() {
         storage.delete(UUID_1);
         assertSize(2);
-        storage.get(UUID_1);
     }
 
     @Test(expected = NotExistStorageException.class)
