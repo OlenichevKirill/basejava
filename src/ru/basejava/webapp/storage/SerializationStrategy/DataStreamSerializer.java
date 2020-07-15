@@ -4,9 +4,7 @@ import ru.basejava.webapp.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataStreamSerializer implements SerializationStrategy {
 
@@ -16,29 +14,26 @@ public class DataStreamSerializer implements SerializationStrategy {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            writeSourceData(dos, contacts.entrySet(), (entry) -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            });
             Map<SectionType, AbstractSection> sections = resume.getSections();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
+            writeSourceData(dos, sections.entrySet(), (entry) -> {
                 SectionType type = entry.getKey();
-                String typeName = type.name();
                 AbstractSection section = entry.getValue();
                 dos.writeUTF(type.name());
-                switch (typeName) {
-                    case "PERSONAL":
-                    case "OBJECTIVE":
+                switch (type) {
+                    case PERSONAL:
+                    case OBJECTIVE:
                         dos.writeUTF(((TextSection) section).getText());
                         break;
-                    case "ACHIEVEMENT":
-                    case "QUALIFICATIONS":
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
                         writeSourceData(dos, ((ListSection) section).getList(), dos::writeUTF);
                         break;
-                    case "EXPERIENCE":
-                    case "EDUCATION":
+                    case EXPERIENCE:
+                    case EDUCATION:
                         writeSourceData(dos, ((InstitutionSection) section).getInstitutions(), (org) -> {
                             dos.writeUTF(org.getHomePage().getName());
                             dos.writeUTF(org.getHomePage().getUrl());
@@ -51,8 +46,9 @@ public class DataStreamSerializer implements SerializationStrategy {
                         });
                         break;
                 }
-            }
+            });
         }
+
     }
 
     @Override
@@ -61,26 +57,21 @@ public class DataStreamSerializer implements SerializationStrategy {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-            int sizeSection = dis.readInt();
-            for (int i = 0; i < sizeSection; i++) {
+            fillResumeData(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            fillResumeData(dis, () -> {
                 SectionType type = SectionType.valueOf(dis.readUTF());
-                String typeName = type.name();
-                switch (typeName) {
-                    case "PERSONAL":
-                    case "OBJECTIVE":
+                switch (type) {
+                    case PERSONAL:
+                    case OBJECTIVE:
                         resume.addSection(type, new TextSection(dis.readUTF()));
                         break;
-                    case "ACHIEVEMENT":
-                    case "QUALIFICATIONS": {
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS: {
                         resume.addSection(type, new ListSection(readSourceData(dis, dis::readUTF)));
                         break;
                     }
-                    case "EXPERIENCE":
-                    case "EDUCATION": {
+                    case EXPERIENCE:
+                    case EDUCATION: {
                         resume.addSection(type, new InstitutionSection(readSourceData(dis, () ->
                                 new Institution(new Link(dis.readUTF(), dis.readUTF()), readSourceData(dis, () ->
                                         new Institution.Position(LocalDate.parse(dis.readUTF()), LocalDate.parse(dis.readUTF()), dis.readUTF(), dis.readUTF())))
@@ -88,14 +79,14 @@ public class DataStreamSerializer implements SerializationStrategy {
                         break;
                     }
                 }
-            }
+            });
             return resume;
         }
     }
 
-    private <T> void writeSourceData(DataOutputStream dos, List<T> list, WriteData<T> writer) throws IOException {
-        dos.writeInt(list.size());
-        for (T t : list) {
+    private <T> void writeSourceData(DataOutputStream dos, Collection<T> collection, WriteData<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T t : collection) {
             writer.write(t);
         }
     }
@@ -107,5 +98,12 @@ public class DataStreamSerializer implements SerializationStrategy {
             list.add(reader.read());
         }
         return list;
+    }
+
+    private void fillResumeData(DataInputStream dis, FillResume filler) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            filler.fill();
+        }
     }
 }
