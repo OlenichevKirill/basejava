@@ -14,15 +14,15 @@ public class MainDeadlock {
 
     public static void createRun(Object obj1, Object obj2) {
         synchronized (obj1) {
-            System.out.println(obj1 + " заблокирован потоком " + Thread.currentThread().getName());
-            System.out.println("Пробуем перехватить " + obj2);
+            System.out.println(obj1 + " blocked by a thread " + Thread.currentThread().getName());
+            System.out.println("Trying to intercept " + obj2);
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             synchronized (obj2) {
-                System.out.println("Удалось перехватить " + obj2);
+                System.out.println("Managed to intercept " + obj2);
             }
         }
     }
