@@ -23,12 +23,6 @@ public class MainStreamAPI {
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
         int sum = integers.stream().parallel().mapToInt((i) -> i).sum();
-        return integers.stream().parallel().filter((i) -> {
-            if (sum % 2 == 0) {
-                return i % 2 != 0;
-            } else {
-                return i % 2 == 0;
-            }
-        }).collect(Collectors.toList());
+        return integers.stream().parallel().filter((i) -> (sum % 2 == 0) == (i % 2 != 0)).collect(Collectors.toList());
     }
 }
