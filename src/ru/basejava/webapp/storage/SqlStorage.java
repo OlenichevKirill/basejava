@@ -51,6 +51,7 @@ public class SqlStorage implements Storage {
             ps.execute();
         } catch (SQLException e) {
             throw new ExistStorageException(resume.getUuid());
+
         }
     }
 
@@ -100,7 +101,7 @@ public class SqlStorage implements Storage {
              PreparedStatement ps = conn.prepareStatement("SELECT * from resume ORDER BY full_name, uuid")) {
             List<Resume> list = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 list.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
             }
             return list;
