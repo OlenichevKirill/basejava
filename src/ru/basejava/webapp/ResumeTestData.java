@@ -72,7 +72,7 @@ public class ResumeTestData {
 
     public static Resume createResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
-        resume.addContact(ContactType.PHONE, "+7(921) 855-0482");
+       /* resume.addContact(ContactType.PHONE, "+7(921) 855-0482");
         resume.addContact(ContactType.SKYPE, "grigory.kislin");
         resume.addContact(ContactType.EMAIL, "gkislin@yandex.ru");
         resume.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
@@ -107,7 +107,7 @@ public class ResumeTestData {
         Institution.Position pos2 = new Institution.Position(DateUtil.of(1993, Month.SEPTEMBER), DateUtil.of(1996, Month.JUNE), "Аспирантура (программист С, С++)", null);
         Institution institutionEducation2 = new Institution(new Link("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "https://itmo.ru/ru/"), Arrays.asList(pos1, pos2));
         List<Institution> institutionsEducation = Arrays.asList(institutionEducation1, institutionEducation2);
-        resume.addSection(SectionType.EDUCATION, new InstitutionSection(institutionsEducation));
+        resume.addSection(SectionType.EDUCATION, new InstitutionSection(institutionsEducation));*/
 
         return resume;
     }
