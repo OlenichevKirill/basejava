@@ -23,9 +23,6 @@ public class SqlHelper {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             return executor.execute(ps);
         } catch (SQLException e) {
-            System.out.println("SQLException message:" + e.getMessage());
-            System.out.println("SQLException SQL state:" + e.getSQLState());
-            System.out.println("SQLException SQL error code:" + e.getErrorCode());
             throw getException(e, uuid);
         }
     }
