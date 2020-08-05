@@ -28,10 +28,6 @@ public class SqlHelper {
     }
 
     private static StorageException getException(SQLException e, String uuid) {
-        if (e.getSQLState().equals("23505")) {
-            return new ExistStorageException(uuid);
-        } else {
-            return new StorageException(e);
-        }
+        return e.getSQLState().equals("23505") ? new ExistStorageException(uuid) : new StorageException(e);
     }
 }
