@@ -14,25 +14,27 @@ public class SqlHelper {
         this.connectionFactory = connectionFactory;
     }
 
-    public interface Execute<T> {
+    public interface Executor<T> {
         T execute(PreparedStatement ps) throws SQLException;
     }
 
-    public <T> T execute(String sql, Execute<T> execute) {
+    public <T> T execute(String sql, String uuid, Executor<T> executor) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            return execute.execute(ps);
+            return executor.execute(ps);
         } catch (SQLException e) {
-            throw new StorageException(e);
+            System.out.println("SQLException message:" + e.getMessage());
+            System.out.println("SQLException SQL state:" + e.getSQLState());
+            System.out.println("SQLException SQL error code:" + e.getErrorCode());
+            throw getException(e, uuid);
         }
     }
 
-    public <T> void executeSave(String sql, String uuid, Execute<T> execute) {
-        try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            execute.execute(ps);
-        } catch (SQLException e) {
-            throw new ExistStorageException(uuid);
+    private static StorageException getException(SQLException e, String uuid) {
+        if (e.getSQLState().equals("23505")) {
+            return new ExistStorageException(uuid);
+        } else {
+            return new StorageException(e);
         }
     }
 }
