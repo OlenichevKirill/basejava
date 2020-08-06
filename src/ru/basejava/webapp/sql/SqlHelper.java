@@ -18,16 +18,16 @@ public class SqlHelper {
         T execute(PreparedStatement ps) throws SQLException;
     }
 
-    public <T> T execute(String sql, String uuid, Executor<T> executor) {
+    public <T> T execute(String sql, Executor<T> executor) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             return executor.execute(ps);
         } catch (SQLException e) {
-            throw getException(e, uuid);
+            throw getException(e);
         }
     }
 
-    private static StorageException getException(SQLException e, String uuid) {
-        return e.getSQLState().equals("23505") ? new ExistStorageException(uuid) : new StorageException(e);
+    private static StorageException getException(SQLException e) {
+        return e.getSQLState().equals("23505") ? new ExistStorageException(e) : new StorageException(e);
     }
 }

@@ -1,7 +1,5 @@
 package ru.basejava.webapp.exception;
 
-import java.sql.SQLException;
-
 public class StorageException extends RuntimeException {
     private final String uuid;
 
