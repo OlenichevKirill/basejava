@@ -117,7 +117,7 @@ public class SqlStorage implements Storage {
                     String resumeOUID = rs.getString("resume_uuid");
                     for (Resume resume : list) {
                         if (resume.getUuid().equals(resumeOUID)) {
-                            addContact(resume,rs);
+                            addContact(resume, rs);
                         }
                     }
                 }
