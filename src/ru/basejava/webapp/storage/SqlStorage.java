@@ -24,6 +24,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
+
         sqlHelper.transactionalExecute(conn -> {
             try (PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
                 ps.setString(1, resume.getFullName());
@@ -61,24 +62,25 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        return sqlHelper.execute("" +
-                        "    SELECT * FROM resume r " +
-                        " LEFT JOIN contact c " +
-                        "        ON r.uuid = c.resume_uuid " +
-                        "     WHERE r.uuid =? ",
-                ps -> {
-                    ps.setString(1, uuid);
-                    ResultSet rs = ps.executeQuery();
-                    if (!rs.next()) {
-                        throw new NotExistStorageException(uuid);
-                    }
-                    Resume resume = new Resume(uuid, rs.getString("full_name"));
-                    do {
-                        addContact(resume, rs);
-                    } while (rs.next());
-
-                    return resume;
-                });
+        return sqlHelper.transactionalExecute(conn -> {
+            Resume resume;
+            try(PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r WHERE r.uuid =?")){
+                ps.setString(1, uuid);
+                ResultSet rs = ps.executeQuery();
+                if (!rs.next()) {
+                    throw new NotExistStorageException(uuid);
+                }
+                resume = new Resume(uuid, rs.getString("full_name"));
+            }
+            try(PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact WHERE resume_uuid = ?")){
+                ps.setString(1,uuid);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()){
+                    addContact(resume, rs);
+                }
+            }
+            return resume;
+        });
     }
 
     @Override
