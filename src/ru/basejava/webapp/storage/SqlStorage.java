@@ -64,7 +64,7 @@ public class SqlStorage implements Storage {
     public Resume get(String uuid) {
         return sqlHelper.transactionalExecute(conn -> {
             Resume resume;
-            try(PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r WHERE r.uuid =?")){
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r WHERE r.uuid =?")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
                 if (!rs.next()) {
@@ -72,10 +72,10 @@ public class SqlStorage implements Storage {
                 }
                 resume = new Resume(uuid, rs.getString("full_name"));
             }
-            try(PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact WHERE resume_uuid = ?")){
-                ps.setString(1,uuid);
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact WHERE resume_uuid = ?")) {
+                ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
-                while (rs.next()){
+                while (rs.next()) {
                     addContact(resume, rs);
                 }
             }
