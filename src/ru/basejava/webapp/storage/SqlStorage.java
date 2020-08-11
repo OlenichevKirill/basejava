@@ -111,13 +111,8 @@ public class SqlStorage implements Storage {
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
                         String uuid = rs.getString("uuid");
-                        Resume resume = resumeMap.computeIfAbsent(uuid, k -> {
-                            try {
-                                return new Resume(uuid, rs.getString("full_name"));
-                            } catch (SQLException e) {
-                                throw new StorageException(e);
-                            }
-                        });
+                        String fullName = rs.getString("full_name");
+                        Resume resume = resumeMap.computeIfAbsent(uuid, k -> new Resume(uuid, fullName));
                         addContact(resume, rs);
                     }
                     return new ArrayList<>(resumeMap.values());
