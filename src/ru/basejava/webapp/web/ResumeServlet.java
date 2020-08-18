@@ -1,17 +1,26 @@
 package ru.basejava.webapp.web;
 
 import ru.basejava.webapp.Config;
+import ru.basejava.webapp.model.ContactType;
 import ru.basejava.webapp.model.Resume;
 import ru.basejava.webapp.storage.SqlStorage;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Writer;
 
 public class ResumeServlet extends HttpServlet {
-    SqlStorage sqlStorage = Config.get().getSqlStorage();
+    SqlStorage sqlStorage; // = Config.get().getSqlStorage();
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        sqlStorage = Config.get().getSqlStorage();
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -20,42 +29,32 @@ public class ResumeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-//        response.setHeader("Content-Type", "text/html; charset=UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-/*        String name = request.getParameter("name");
-        response.getWriter().write(name == null ? "Hello Resumes!" : "Hello " + name + '!');*/
-
-        response.getWriter().write("<html>");
-        response.getWriter().write("<head>");
-        response.getWriter().write("<title>All resumes</title>");
-        response.getWriter().write("</head>");
-        response.getWriter().write("<body>");
-        response.getWriter().write("<table style=\"width:100 % \">");
-        response.getWriter().write("<tr>");
-        response.getWriter().write("<th>uuid</th>");
-        response.getWriter().write("<th>full_name</th>");
-        response.getWriter().write("</tr>");
-
+        Writer writer = response.getWriter();
+        writer.write(
+                "<html>\n" +
+                        "<head>\n" +
+                        "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+                        "    <link rel=\"stylesheet\" href=\"css/style.css\">\n" +
+                        "    <title>Список всех резюме</title>\n" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "<section>\n" +
+                        "<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\">\n" +
+                        "    <tr>\n" +
+                        "        <th>Имя</th>\n" +
+                        "        <th>Email</th>\n" +
+                        "    </tr>\n");
         for (Resume resume : sqlStorage.getAllSorted()) {
-            response.getWriter().write("<tr>");
-            response.getWriter().write("<td>" + resume.getUuid() + "</td>");
-            response.getWriter().write("<td>" + resume.getFullName() + "</td>");
-            response.getWriter().write("</tr>");
+            writer.write(
+                    "<tr>\n" +
+                            "     <td><a href=\"resume?uuid=" + resume.getUuid() + "\">" + resume.getFullName() + "</a></td>\n" +
+                            "     <td>" + resume.getContact(ContactType.EMAIL) + "</td>\n" +
+                            "</tr>\n");
         }
-//        response.getWriter().write("<tr>");
-//        response.getWriter().write("<td>ae6b9a27-c443-4826-9bcf-4d43ac3b6281</td>");
-//        response.getWriter().write("<td>Tom</td>");
-//        response.getWriter().write("</tr>");
-//                response.getWriter().write("<tr>");
-//        response.getWriter().write("<td>0b815879-06c1-418c-83cb-a40db2e737e5</td>");
-//        response.getWriter().write("<td>Bill</td>");
-//        response.getWriter().write("</tr>");
-//                response.getWriter().write("<tr>");
-//        response.getWriter().write("<td>74c08cae-4a8c-4e54-9195-ff3e1384e4c9</td>");
-//        response.getWriter().write("<td>Tom</td>");
-//        response.getWriter().write("</tr>");
-        response.getWriter().write("</table>");
-        response.getWriter().write("</body>");
-        response.getWriter().write("</html>");
+        writer.write("</table>\n" +
+                "</section>\n" +
+                "</body>\n" +
+                "</html>\n");
     }
 }
