@@ -96,7 +96,7 @@ public class ResumeTestData {
         qualifications.add("JavaScript: jQuery, ExtJS, Bootstrap.js, underscore.js");
         resume.addSection(SectionType.QUALIFICATIONS, new ListSection(qualifications));
 
-       /* Institution institution1 = new Institution(new Link("Java Online Projects", "http://javaops.ru"), Arrays.asList(new Institution.Position(DateUtil.of(2013, Month.NOVEMBER), NOW, "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.")));
+        Institution institution1 = new Institution(new Link("Java Online Projects", "http://javaops.ru"), Arrays.asList(new Institution.Position(DateUtil.of(2013, Month.NOVEMBER), NOW, "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.")));
         Institution institution2 = new Institution(new Link("Wrike", "https://www.wrike.com"), Arrays.asList(new Institution.Position(DateUtil.of(2012, Month.APRIL), DateUtil.of(2016, Month.JANUARY), "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring,MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.")));
         Institution institution3 = new Institution(new Link("RIT Center", null), Arrays.asList(new Institution.Position(DateUtil.of(2014, Month.NOVEMBER), DateUtil.of(2014, Month.NOVEMBER), "Java архитектор.", "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python")));
         List<Institution> institutions = Arrays.asList(institution1, institution2, institution3);
@@ -107,7 +107,7 @@ public class ResumeTestData {
         Institution.Position pos2 = new Institution.Position(DateUtil.of(1993, Month.SEPTEMBER), DateUtil.of(1996, Month.JUNE), "Аспирантура (программист С, С++)", null);
         Institution institutionEducation2 = new Institution(new Link("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "https://itmo.ru/ru/"), Arrays.asList(pos1, pos2));
         List<Institution> institutionsEducation = Arrays.asList(institutionEducation1, institutionEducation2);
-        resume.addSection(SectionType.EDUCATION, new InstitutionSection(institutionsEducation));*/
+        resume.addSection(SectionType.EDUCATION, new InstitutionSection(institutionsEducation));
 
         return resume;
     }
