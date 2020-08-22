@@ -59,6 +59,10 @@ public class Resume implements Serializable {
         return section.get(type);
     }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public void addContact(ContactType type, String value) {
         contact.put(type, value);
     }
