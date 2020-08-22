@@ -1,3 +1,6 @@
+<%@ page import="ru.basejava.webapp.model.TextSection" %>
+<%@ page import="ru.basejava.webapp.model.ListSection" %>
+<%@ page import="ru.basejava.webapp.model.InstitutionSection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -18,6 +21,42 @@
                 <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
     <p>
+        <c:forEach var="sectionEntry" items="${resume.sections}">
+            <jsp:useBean id="sectionEntry"
+                         type="java.util.Map.Entry<ru.basejava.webapp.model.SectionType, ru.basejava.webapp.model.AbstractSection>"/>
+    <h3>${sectionEntry.key.title}</h3>
+    <c:choose>
+        <c:when test="${sectionEntry.key.name() == 'PERSONAL' || sectionEntry.key.name() == 'OBJECTIVE'}">
+            <%=((TextSection) sectionEntry.getValue()).getText()%><br/>
+        </c:when>
+        <c:when test="${sectionEntry.key.name() == 'ACHIEVEMENT' || sectionEntry.key.name() == 'QUALIFICATIONS'}">
+            <c:forEach var="list" items="<%=((ListSection) sectionEntry.getValue()).getList()%>">
+                <ul>
+                    <li>${list}</li>
+                </ul>
+            </c:forEach>
+        </c:when>
+        <c:when test="${sectionEntry.key.name() == 'EXPERIENCE' || sectionEntry.key.name() == 'EDUCATION'}">
+            <c:forEach var="org" items="<%=((InstitutionSection) sectionEntry.getValue()).getInstitutions()%>">
+                <c:choose>
+                    <c:when test="${org.homePage.url == null || org.homePage.url.trim().length() == 0}">
+                        <h4>${org.homePage.name}</h4>
+                    </c:when>
+                    <c:otherwise>
+                        <h4><a href="${org.homePage.url}">${org.homePage.name}</a></h4>
+                    </c:otherwise>
+                </c:choose>
+                <c:forEach var="pos" items="${org.positions}">
+                    ${pos.startDate} - ${pos.endDate}
+                    <b>${pos.title}</b><br/>
+                    ${pos.description}<br/>
+                </c:forEach>
+            </c:forEach>
+        </c:when>
+
+    </c:choose>
+    </c:forEach>
+    <button onclick="window.history.back()">Вернуться назад</button>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

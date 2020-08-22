@@ -1,4 +1,4 @@
-<%@ page import = "ru.basejava.webapp.model.ContactType"%>
+<%@ page import="ru.basejava.webapp.model.ContactType" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -10,6 +10,10 @@
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
+    <form>
+        <button name="action" type="submit" value="add">Создать резюме</button>
+        <p>
+    </form>
     <table border="1" cellpadding="8" cellspacing="0">
         <tr>
             <th>Имя</th>
@@ -21,7 +25,8 @@
             <jsp:useBean id="resume" type="ru.basejava.webapp.model.Resume"/>
             <tr>
                 <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
-                <td><%=ContactType.EMAIL.toHtml(resume.getContact(ContactType.EMAIL))%></td>
+                <td><%=ContactType.EMAIL.toHtml(resume.getContact(ContactType.EMAIL))%>
+                </td>
                 <td><a href="resume?uuid=${resume.uuid}&action=delete"><img src="img/delete.png"></a></td>
                 <td><a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png"></a></td>
             </tr>

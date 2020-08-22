@@ -1,4 +1,5 @@
 <%@ page import="ru.basejava.webapp.model.ContactType" %>
+<%@ page import="ru.basejava.webapp.model.SectionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -25,9 +26,23 @@
             </dl>
         </c:forEach>
         <h3>Секции:</h3>
-        <input type="text" name="section" size=30 value="1"><br/>
-        <input type="text" name="section" size=30 value="2"><br/>
-        <input type="text" name="section" size=30 value="3"><br/>
+        <c:forEach var="sectionType" items="<%=SectionType.values()%>">
+            <jsp:useBean id="sectionType" type="ru.basejava.webapp.model.SectionType"/>
+            <dl>
+                <dt>${sectionType.title}</dt>
+                <c:choose>
+                    <c:when test="${sectionType.name() == 'PERSONAL' || sectionType.name() == 'OBJECTIVE'}">
+                        <dd><textarea cols="120" rows="3" name="${sectionType.name()}">${resume.getSection(sectionType).toString()}</textarea>
+                        </dd>
+                    </c:when>
+                    <c:when test="${sectionType.name() == 'ACHIEVEMENT' || sectionType.name() == 'QUALIFICATIONS'}">
+                        <dd>
+                            <textarea cols="120" rows="10" name="${sectionType.name()}">${resume.getSection(sectionType).toString()}</textarea>
+                        </dd>
+                    </c:when>
+                </c:choose>
+            </dl>
+        </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
         <button onclick="window.history.back()">Отменить</button>

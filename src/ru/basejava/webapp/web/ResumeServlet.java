@@ -1,8 +1,7 @@
 package ru.basejava.webapp.web;
 
 import ru.basejava.webapp.Config;
-import ru.basejava.webapp.model.ContactType;
-import ru.basejava.webapp.model.Resume;
+import ru.basejava.webapp.model.*;
 import ru.basejava.webapp.storage.SqlStorage;
 
 import javax.servlet.ServletConfig;
@@ -25,17 +24,47 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume r = sqlStorage.get(uuid);
-        r.setFullName(fullName);
+
+        Resume resume;
+        if (uuid == null || uuid.trim().length() == 0) {
+            resume = new Resume(fullName);
+        } else {
+            resume = sqlStorage.get(uuid);
+            resume.setFullName(fullName);
+        }
+
+
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
-                r.addContact(type, value);
+                resume.addContact(type, value);
             } else {
-                r.getContacts().remove(type);
+                resume.getContacts().remove(type);
             }
         }
-        sqlStorage.update(r);
+
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
+                switch (type) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        resume.addSection(type, new TextSection(value));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        resume.addSection(type, new ListSection(value.split("\n")));
+                }
+            } else {
+                resume.getSections().remove(type);
+            }
+        }
+
+        if (uuid == null || uuid.trim().length() == 0) {
+            sqlStorage.save(resume);
+        } else {
+            sqlStorage.update(resume);
+        }
         response.sendRedirect("resume");
     }
 
@@ -47,20 +76,23 @@ public class ResumeServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
             return;
         }
-        Resume r;
+        Resume resume;
         switch (action) {
             case "delete":
                 sqlStorage.delete(uuid);
                 response.sendRedirect("resume");
                 return;
+            case "add":
+                resume = new Resume();
+                break;
             case "view":
             case "edit":
-                r = sqlStorage.get(uuid);
+                resume = sqlStorage.get(uuid);
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
         }
-        request.setAttribute("resume", r);
+        request.setAttribute("resume", resume);
         request.getRequestDispatcher(
                 ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
         ).forward(request, response);
