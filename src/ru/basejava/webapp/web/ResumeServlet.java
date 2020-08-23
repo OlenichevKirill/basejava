@@ -55,7 +55,7 @@ public class ResumeServlet extends HttpServlet {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> list = new ArrayList<>(Arrays.asList(value.split("\n")));
-                        list.removeIf(str -> Objects.equals(str, "\r"));
+                        list.removeIf(str -> Objects.equals(str, "\r") || str.trim().length() == 0);
                         resume.addSection(type, new ListSection(list));
                 }
             } else {
