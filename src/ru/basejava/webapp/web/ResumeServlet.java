@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.*;
 
 public class ResumeServlet extends HttpServlet {
     SqlStorage sqlStorage; // = Config.get().getSqlStorage();
@@ -53,7 +54,9 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        resume.addSection(type, new ListSection(value.split("\n")));
+                        List<String> list = new ArrayList<>(Arrays.asList(value.split("\n")));
+                        list.removeIf(str -> Objects.equals(str, "\r"));
+                        resume.addSection(type, new ListSection(list));
                 }
             } else {
                 resume.getSections().remove(type);
