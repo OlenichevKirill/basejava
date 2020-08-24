@@ -10,7 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
 
 public class ResumeServlet extends HttpServlet {
     SqlStorage sqlStorage; // = Config.get().getSqlStorage();
@@ -57,6 +61,13 @@ public class ResumeServlet extends HttpServlet {
                         List<String> list = new ArrayList<>(Arrays.asList(value.split("\n")));
                         list.removeIf(str -> Objects.equals(str, "\r") || str.trim().length() == 0);
                         resume.addSection(type, new ListSection(list));
+                        break;
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        String[] values = request.getParameterValues(type.name());
+                        for (String val : values) {
+                            System.out.println(val);
+                        }
                 }
             } else {
                 resume.getSections().remove(type);
