@@ -56,7 +56,7 @@ public class ResumeTestData {
         List<Institution> institutions = Arrays.asList(institution1, institution2, institution3);
         resume.addSection(SectionType.EXPERIENCE, new InstitutionSection(institutions));
 
-        Institution institutionEducation1 = new Institution(new Link("Coursera", "https://www.coursera.org/learn/progfun1"), Arrays.asList(new Institution.Position(DateUtil.of(2013, Month.MARCH), DateUtil.of(2013, Month.MAY), "", "")));
+        Institution institutionEducation1 = new Institution(new Link("Coursera", "https://www.coursera.org/learn/progfun1"), Arrays.asList(new Institution.Position(DateUtil.of(2013, Month.MARCH), DateUtil.of(2013, Month.MAY), "2", "")));
         Institution.Position pos1 = new Institution.Position(DateUtil.of(1987, Month.SEPTEMBER), DateUtil.of(1993, Month.JUNE), "Инженер (программист Fortran, C)", "");
         Institution.Position pos2 = new Institution.Position(DateUtil.of(1993, Month.SEPTEMBER), DateUtil.of(1996, Month.JUNE), "Аспирантура (программист С, С++)", "");
         Institution institutionEducation2 = new Institution(new Link("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "https://itmo.ru/ru/"), Arrays.asList(pos1, pos2));
@@ -102,7 +102,7 @@ public class ResumeTestData {
         List<Institution> institutions = Arrays.asList(institution1, institution2, institution3);
         resume.addSection(SectionType.EXPERIENCE, new InstitutionSection(institutions));
 
-        Institution institutionEducation1 = new Institution(new Link("Coursera", "https://www.coursera.org/learn/progfun1"), Arrays.asList(new Institution.Position(DateUtil.of(2013, Month.MARCH), DateUtil.of(2013, Month.MAY), "\"Functional Programming Principles in Scala\" by Martin Odersky", "")));
+        Institution institutionEducation1 = new Institution(new Link("Coursera", "https://www.coursera.org/learn/progfun1"), Arrays.asList(new Institution.Position(DateUtil.of(2013, Month.MARCH), DateUtil.of(2013, Month.MAY), "Functional Programming Principles in Scala by Martin Odersky", "")));
         Institution.Position pos1 = new Institution.Position(DateUtil.of(1987, Month.SEPTEMBER), DateUtil.of(1993, Month.JUNE), "Инженер (программист Fortran, C)", null);
         Institution.Position pos2 = new Institution.Position(DateUtil.of(1993, Month.SEPTEMBER), DateUtil.of(1996, Month.JUNE), "Аспирантура (программист С, С++)", null);
         Institution institutionEducation2 = new Institution(new Link("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "https://itmo.ru/ru/"), Arrays.asList(pos1, pos2));

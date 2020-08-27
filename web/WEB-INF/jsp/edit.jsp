@@ -1,6 +1,5 @@
 <%@ page import="ru.basejava.webapp.model.ContactType" %>
 <%@ page import="ru.basejava.webapp.model.SectionType" %>
-<%@ page import="ru.basejava.webapp.model.InstitutionSection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -44,37 +43,37 @@
                         </dd>
                     </c:when>
                     <c:when test="${sectionType.name() == 'EXPERIENCE' || sectionType.name() == 'EDUCATION'}">
-                        <c:forEach var="org" items="${(resume.getSection(sectionType)).getInstitutions()}">
+                        <c:forEach var="org" items="${(resume.getSection(sectionType)).getInstitutions()}" varStatus="number">
                             <dl>
                                 <dt><b>Организация</b></dt>
-                                <dd><input type="text" name="${sectionType.name()}" size=30
-                                           value="${org.homePage.name}"><br></dd>
+                                <dd><input type="text" name="${sectionType.name()}" size=50
+                                           value="${org.homePage.name}" placeholder="Для удаления оставить пустым поле"><br></dd>
                             </dl>
                             <dl>
                                 <dt> Электронный адрес</dt>
-                                <dd><input type="text" name="${sectionType.name()}" size=30 value="${org.homePage.url}"><br>
+                                <dd><input type="text" name="${sectionType.name()}_url" size=50 value="${org.homePage.url}"><br>
                                 </dd>
                             </dl>
-                            <c:forEach var="pos" items="${org.getPositions()}">
+                            <c:forEach var="pos" items="${org.positions}">
                                 <dl>
                                     <dt>Дата начала</dt>
-                                    <dd><input type="text" name="${sectionType.name()}" size=30
-                                               value="${pos.startDate}"><br></dd>
+                                    <dd><input type="text" name="${sectionType.name()}${number.index}_startDate" size=35
+                                               value="${pos.startDate}" placeholder="Для удаления позиции оставить пустым"><br></dd>
                                 </dl>
                                 <dl>
                                     <dt>Дата окончания</dt>
-                                    <dd><input type="text" name="${sectionType.name()}" size=30
-                                               value="${pos.endDate}"><br></dd>
+                                    <dd><input type="text" name="${sectionType.name()}${number.index}_endDate" size=35
+                                               value="${pos.endDate}" placeholder="Для удаления позиции оставить пустым"><br></dd>
                                 </dl>
                                 <dl>
                                     <dt>Заголовок</dt>
-                                    <dd><input type="text" name="${sectionType.name()}" size=30
-                                               value="${pos.title}"><br></dd>
+                                    <dd><input type="text" name="${sectionType.name()}${number.index}_title" size=50
+                                               value="${pos.title}" placeholder="Для удаления позиции оставить пустым поле"><br></dd>
                                 </dl>
                                 <dl>
                                     <dt>Описание</dt>
                                     <dd><textarea cols="120" rows="10"
-                                                  name="${sectionType.name()}">"${pos.description}"</textarea></dd>
+                                                  name="${sectionType.name()}${number.index}_description">${pos.description}</textarea></dd>
                                 </dl>
                                 <br>
                                 <br>
