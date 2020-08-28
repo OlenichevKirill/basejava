@@ -1,5 +1,6 @@
 <%@ page import="ru.basejava.webapp.model.ContactType" %>
 <%@ page import="ru.basejava.webapp.model.SectionType" %>
+<%@ page import="ru.basejava.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -18,18 +19,18 @@
             <dt>Имя:</dt>
             <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
         </dl>
-        <h3>Контакты:</h3>
+        <h2>Контакты:</h2>
         <c:forEach var="type" items="<%=ContactType.values()%>">
             <dl>
                 <dt>${type.title}</dt>
                 <dd><input type="text" name="${type.name()}" size=30 value="${resume.getContact(type)}"></dd>
             </dl>
         </c:forEach>
-        <h3>Секции:</h3>
+        <h2>Секции:</h2>
         <c:forEach var="sectionType" items="<%=SectionType.values()%>">
             <jsp:useBean id="sectionType" type="ru.basejava.webapp.model.SectionType"/>
             <dl>
-                <dt><h4>${sectionType.title}</h4></dt>
+                <dt><h3>${sectionType.title}</h3></dt>
                 <c:choose>
                     <c:when test="${sectionType.name() == 'PERSONAL' || sectionType.name() == 'OBJECTIVE'}">
                         <dd><textarea cols="120" rows="3"
@@ -43,39 +44,46 @@
                         </dd>
                     </c:when>
                     <c:when test="${sectionType.name() == 'EXPERIENCE' || sectionType.name() == 'EDUCATION'}">
-                        <c:forEach var="org" items="${(resume.getSection(sectionType)).getInstitutions()}" varStatus="number">
+                        <c:forEach var="org" items="${(resume.getSection(sectionType)).getInstitutions()}"
+                                   varStatus="number">
                             <dl>
                                 <dt><b>Организация</b></dt>
                                 <dd><input type="text" name="${sectionType.name()}" size=50
-                                           value="${org.homePage.name}" placeholder="Для удаления оставить пустым поле"><br></dd>
+                                           value="${org.homePage.name}" placeholder="Для удаления оставить пустым поле"><br>
+                                </dd>
                             </dl>
                             <dl>
                                 <dt> Электронный адрес</dt>
-                                <dd><input type="text" name="${sectionType.name()}_url" size=50 value="${org.homePage.url}"><br>
+                                <dd><input type="text" name="${sectionType.name()}_url" size=50
+                                           value="${org.homePage.url}"><br>
                                 </dd>
                             </dl>
                             <c:forEach var="pos" items="${org.positions}">
+                                <jsp:useBean id="pos" type="ru.basejava.webapp.model.Institution.Position"/>
                                 <dl>
                                     <dt>Дата начала</dt>
                                     <dd><input type="text" name="${sectionType.name()}${number.index}_startDate" size=35
-                                               value="${pos.startDate}" placeholder="Для удаления позиции оставить пустым"><br></dd>
+                                               value="<%=DateUtil.format(pos.getStartDate())%>"
+                                               placeholder="MM/yyyy или пустое для удаления"><br></dd>
                                 </dl>
                                 <dl>
                                     <dt>Дата окончания</dt>
                                     <dd><input type="text" name="${sectionType.name()}${number.index}_endDate" size=35
-                                               value="${pos.endDate}" placeholder="Для удаления позиции оставить пустым"><br></dd>
+                                               value="<%=DateUtil.format(pos.getEndDate())%>"
+                                               placeholder="MM/yyyy или пустое для удаления"><br></dd>
                                 </dl>
                                 <dl>
                                     <dt>Заголовок</dt>
                                     <dd><input type="text" name="${sectionType.name()}${number.index}_title" size=50
-                                               value="${pos.title}" placeholder="Для удаления позиции оставить пустым поле"><br></dd>
+                                               value="${pos.title}"
+                                               placeholder="Для удаления позиции оставить пустым поле"><br></dd>
                                 </dl>
                                 <dl>
                                     <dt>Описание</dt>
                                     <dd><textarea cols="120" rows="10"
-                                                  name="${sectionType.name()}${number.index}_description">${pos.description}</textarea></dd>
+                                                  name="${sectionType.name()}${number.index}_description">${pos.description}</textarea>
+                                    </dd>
                                 </dl>
-                                <br>
                                 <br>
                             </c:forEach>
                         </c:forEach>

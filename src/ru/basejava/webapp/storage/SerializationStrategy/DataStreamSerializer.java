@@ -57,22 +57,22 @@ public class DataStreamSerializer implements SerializationStrategy {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            fillResumeData(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            fillResumeData(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             fillResumeData(dis, () -> {
                 SectionType type = SectionType.valueOf(dis.readUTF());
                 switch (type) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        resume.addSection(type, new TextSection(dis.readUTF()));
+                        resume.setSection(type, new TextSection(dis.readUTF()));
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS: {
-                        resume.addSection(type, new ListSection(readSourceData(dis, dis::readUTF)));
+                        resume.setSection(type, new ListSection(readSourceData(dis, dis::readUTF)));
                         break;
                     }
                     case EXPERIENCE:
                     case EDUCATION: {
-                        resume.addSection(type, new InstitutionSection(readSourceData(dis, () ->
+                        resume.setSection(type, new InstitutionSection(readSourceData(dis, () ->
                                 new Institution(new Link(dis.readUTF(), dis.readUTF()), readSourceData(dis, () ->
                                         new Institution.Position(LocalDate.parse(dis.readUTF()), LocalDate.parse(dis.readUTF()), dis.readUTF(), dis.readUTF())))
                         )));

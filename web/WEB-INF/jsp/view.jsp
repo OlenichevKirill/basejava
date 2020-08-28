@@ -1,6 +1,7 @@
 <%@ page import="ru.basejava.webapp.model.TextSection" %>
 <%@ page import="ru.basejava.webapp.model.ListSection" %>
 <%@ page import="ru.basejava.webapp.model.InstitutionSection" %>
+<%@ page import="ru.basejava.webapp.util.HtmlUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -47,7 +48,8 @@
                     </c:otherwise>
                 </c:choose>
                 <c:forEach var="pos" items="${org.positions}">
-                    ${pos.startDate} - ${pos.endDate}
+                    <jsp:useBean id="pos" type="ru.basejava.webapp.model.Institution.Position"/>
+                    <%=HtmlUtil.formatDates(pos)%>
                     <b>${pos.title}</b><br/>
                     ${pos.description}<br/>
                 </c:forEach>

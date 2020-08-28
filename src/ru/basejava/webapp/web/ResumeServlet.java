@@ -45,7 +45,7 @@ public class ResumeServlet extends HttpServlet {
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (isExist(value)) {
-                resume.addContact(type, value);
+                resume.setContact(type, value);
             } else {
                 resume.getContacts().remove(type);
             }
@@ -58,13 +58,13 @@ public class ResumeServlet extends HttpServlet {
                 switch (type) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        resume.addSection(type, new TextSection(value));
+                        resume.setSection(type, new TextSection(value));
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> list = new ArrayList<>(Arrays.asList(value.split("\n")));
                         list.removeIf(str -> Objects.equals(str, "\r") || str.trim().length() == 0);
-                        resume.addSection(type, new ListSection(list));
+                        resume.setSection(type, new ListSection(list));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
@@ -80,13 +80,13 @@ public class ResumeServlet extends HttpServlet {
 
                                 for (int j = 0; j < title.length; j++) {
                                     if (isExist(title[j]) && isExist(startDate[j]) && isExist(endDate[j])) {
-                                        positions.add(new Institution.Position(LocalDate.parse(startDate[j]), LocalDate.parse(endDate[j]), title[j], description[j]));
+                                        positions.add(new Institution.Position(DateUtil.parse(startDate[j]), DateUtil.parse(endDate[j]), title[j], description[j]));
                                     }
                                 }
                                 institutions.add(new Institution(new Link(orgName[i], url[i]), positions));
                             }
                         }
-                        resume.addSection(type, new InstitutionSection(institutions));
+                        resume.setSection(type, new InstitutionSection(institutions));
                         break;
                 }
             } else {
@@ -120,8 +120,8 @@ public class ResumeServlet extends HttpServlet {
                 resume = new Resume();
                 List<Institution.Position> pos = new ArrayList<>();
                 pos.add(addPosition());
-                resume.addSection(SectionType.EDUCATION, new InstitutionSection(new Institution(new Link("", ""), pos)));
-                resume.addSection(SectionType.EXPERIENCE, new InstitutionSection(new Institution(new Link("", ""), pos)));
+                resume.setSection(SectionType.EDUCATION, new InstitutionSection(new Institution(new Link("", ""), pos)));
+                resume.setSection(SectionType.EXPERIENCE, new InstitutionSection(new Institution(new Link("", ""), pos)));
                 break;
             case "view":
                 resume = sqlStorage.get(uuid);
